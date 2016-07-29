@@ -40,11 +40,11 @@ void loop()
   value = value==HIGH ? 1 : 0;
   if (value == 1){
     // create and send message for open state
-    const char msgOpen[] = "window-reu-open";
+    const char msgOpen[] = "window-1-open";
     radio.write(&msgOpen, sizeof(msgOpen));
   } else {
     // create and send message for close state
-    const char msgClose[] = "window-reu-close";
+    const char msgClose[] = "window-1-close";
     radio.write(&msgClose, sizeof(msgClose));
   }  
   // wait 5s
