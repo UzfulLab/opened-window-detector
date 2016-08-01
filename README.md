@@ -2,6 +2,8 @@
 
 This project is a opened window detector solution, based on arduino board and RF24 communication module.
 
+![opened window detector gif](http://cdn.instructables.com/FH7/IQ0W/IR5MVTNI/FH7IQ0WIR5MVTNI.ANIMATED.LARGE.gif)
+
 ###Dependencies:
 In order to make it work you will have to add these two libraries :
  * [Bounce2](https://github.com/thomasfredericks/Bounce2)
