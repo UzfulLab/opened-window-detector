@@ -4,8 +4,6 @@
 
 RF24 radio(7, 8);
 
-// TODO, fix : blink led is quicker if remove serial.print
-
 const byte rxAddr2[6] = "00002";
 int ledW2 = 9;
 int ledW1 = 3;
@@ -13,9 +11,11 @@ int ledW1 = 3;
 bool stateW1;
 bool stateW2;
 
+//bool for sensor's init
 bool w1SensorInit = false;
 bool w2SensorInit = false;
 
+// counter to monitor if sensor is down
 int isW1Down = 0;
 int isW2Down = 0;
 
@@ -46,7 +46,8 @@ void loop()
 
     Serial.println(text);
 
-    if (String(text) == "window-reu-open"){
+    // you can change "window-1-open" with name of your window, but don't forget to change it in your sensor's code too !
+    if (String(text) == "window-1-open"){
       // check init state
       if (!w1SensorInit){
         w1SensorInit = true;
@@ -55,7 +56,7 @@ void loop()
       isW1Down = 0;
       isW2Down += 1;
 
-    } else if (String(text) == "window-reu-close"){
+    } else if (String(text) == "window-1-close"){
       // check init state
       if (!w1SensorInit){
         w1SensorInit = true;
@@ -64,7 +65,7 @@ void loop()
       isW1Down = 0;
       isW2Down += 1;
 
-    } else if (String(text) == "window-mezza-open"){
+    } else if (String(text) == "window-2-open"){
       // check init state
       if (!w2SensorInit){
         w2SensorInit = true;
@@ -73,7 +74,7 @@ void loop()
       isW2Down = 0;
       isW1Down += 1;
 
-    } else if (String(text) == "window-mezza-close"){
+    } else if (String(text) == "window-2-close"){
       // check init state
       if (!w2SensorInit){
         w2SensorInit = true;
@@ -87,43 +88,34 @@ void loop()
       isW1Down += 1;
       isW2Down += 1;
     }
-  handleLightState(stateW1, ledW1, isW1Down);
-  handleLightState(stateW2, ledW2, isW2Down);
+  handleLightState(w1SensorInit, stateW1, ledW1, isW1Down);
+  handleLightState(w2SensorInit, stateW2, ledW2, isW2Down);
 
 }
 
 
-void handleLightState(bool wState, int ledPin, int isWdown) {
-  Serial.print("led state beggining :");
-  Serial.println(ledState);
- 
-  Serial.print("wState :");
-  Serial.println(wState);
+void handleLightState(bool sensorInit, bool wState, int ledPin, int isWdown) {
   if (wState) {
     //blink
     if (ledState = HIGH) {
-      Serial.println("entered in if (ledState = HIGH)");
       ledState = LOW;
     } else {
-      Serial.println("entered in ELSE OF if (ledState = HIGH)");
       ledState = HIGH;
     }
     digitalWrite(ledPin, ledState);
     delay(500);
   }
-
   ledState = HIGH;
-  Serial.print("w1SensorInit :");
-  Serial.println(w1SensorInit);
-    Serial.print("w2SensorInit :");
-  Serial.println(w2SensorInit);
    // if no message from W1 since too long, turn off led
   if (maxCount <= isWdown) {
     if (ledState = HIGH) {
       ledState = LOW;
-      Serial.println("maxCount reach");
     }
   }
-  digitalWrite(ledPin, ledState);
-}
+  if(!sensorInit){
+    ledState = LOW;
+  }
 
+  digitalWrite(ledPin, ledState);
+  delay(30);
+}
